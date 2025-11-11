@@ -1,0 +1,174 @@
+
+#include <iostream> 
+#include <string> 
+using namespace std; 
+ 
+class Engine { 
+protected: 
+string engineType; 
+int horsepower; 
+public: 
+Engine(string type = "Petrol", int hp = 100) : engineType(type), horsepower(hp) { 
+cout << "Engine constructed.\n"; 
+} 
+void showEngineSpecs() const { 
+cout << "Engine Type: " << engineType << ", Horsepower: " << horsepower << endl; 
+} 
+~Engine() { 
+cout << "Engine destructed.\n"; 
+} 
+}; 
+ 
+class Vehicle : virtual public Engine { 
+protected: 
+string brand; 
+int year; 
+    
+    class Registration { 
+        string regNumber; 
+        string ownerName; 
+ 
+    public: 
+        void input() { 
+            cout << "Enter Registration Number: "; 
+            cin >> regNumber; 
+            cout << "Enter Owner Name: "; 
+            cin >> ownerName; 
+        } 
+ 
+        void display() const { 
+            cout << "Registration Number: " << regNumber << ", Owner: " << ownerName << endl; 
+        } 
+    }; 
+ 
+    Registration reg; 
+ 
+public: 
+    Vehicle(string b = "Generic", int y = 2020) : brand(b), year(y) { 
+        cout << "Vehicle constructed.\n"; 
+    } 
+ 
+    void inputRegistration() { 
+        reg.input(); 
+    } 
+ 
+    void showRegistration() const { 
+        reg.display(); 
+    } 
+ 
+virtual void display() const { 
+cout << "Brand: " << brand << ", Year: " << year << endl; 
+} 
+virtual ~Vehicle() { 
+cout << "Vehicle destructed.\n"; 
+} 
+friend class Service; 
+}; 
+ 
+class Service { 
+public: 
+void updateService(const Vehicle &v) { 
+cout << "Service update for vehicle: " << v.brand << " (" << v.year << ")\n"; 
+} 
+}; 
+ 
+class Battery { 
+protected: 
+int batteryCapacity; // in kWh 
+public: 
+Battery(int capacity = 50) : batteryCapacity(capacity) { 
+cout << "Battery constructed.\n"; 
+} 
+void showBatteryInfo() const { 
+cout << "Battery Capacity: " << batteryCapacity << " kWh\n"; 
+} 
+~Battery() { 
+cout << "Battery destructed.\n"; 
+} 
+}; 
+ 
+class Car : public Vehicle { 
+int numDoors; 
+public: 
+Car(string b, int y, int doors) : Vehicle(b, y), numDoors(doors) { 
+cout << "Car constructed.\n"; 
+} 
+void display() const override { 
+Vehicle::display(); 
+cout << "Car with " << numDoors << " doors.\n"; 
+} 
+~Car() { 
+cout << "Car destructed.\n"; 
+} 
+}; 
+class Truck : public Vehicle { 
+float loadCapacity; 
+public: 
+Truck(string b, int y, float capacity) : Vehicle(b, y), loadCapacity(capacity) { 
+cout << "Truck constructed.\n"; 
+} 
+void display() const override { 
+Vehicle::display(); 
+cout << "Truck with " << loadCapacity << " tons capacity.\n"; 
+} 
+~Truck() { 
+cout << "Truck destructed.\n"; 
+} 
+}; 
+class Motorcycle : public Vehicle { 
+bool hasSidecar; 
+public: 
+Motorcycle(string b, int y, bool sidecar) : Vehicle(b, y), hasSidecar(sidecar) { 
+cout << "Motorcycle constructed.\n"; 
+} 
+void display() const override { 
+Vehicle::display(); 
+cout << "Motorcycle " << (hasSidecar ? "with" : "without") << " sidecar.\n"; 
+} 
+~Motorcycle() { 
+cout << "Motorcycle destructed.\n"; 
+} 
+}; 
+class ElectricVehicle : public Vehicle, public Battery { 
+public: 
+ElectricVehicle(string b, int y, int capacity) 
+: Vehicle(b, y), Battery(capacity) { 
+cout << "Electric Vehicle constructed.\n"; 
+} 
+void display() const override { 
+Vehicle::display(); 
+showBatteryInfo(); 
+} 
+~ElectricVehicle() { 
+cout << "Electric Vehicle destructed.\n"; 
+} 
+}; 
+ 
+int main() { 
+cout << "\n--- Creating Car ---\n"; 
+Car car("Toyota", 2022, 4); 
+car.inputRegistration(); 
+car.display(); 
+car.showRegistration(); 
+cout << "\n--- Creating Truck ---\n"; 
+Truck truck("Volvo", 2021, 15.5); 
+truck.inputRegistration(); 
+truck.display(); 
+truck.showRegistration(); 
+cout << "\n--- Creating Motorcycle ---\n"; 
+Motorcycle bike("Harley", 2023, true); 
+bike.inputRegistration(); 
+bike.display(); 
+bike.showRegistration(); 
+cout << "\n--- Creating Electric Vehicle ---\n"; 
+ElectricVehicle ev("Tesla", 2024, 75); 
+ev.inputRegistration(); 
+ev.display(); 
+ev.showRegistration(); 
+cout << "\n--- Service Updates ---\n"; 
+Service svc; 
+svc.updateService(car); 
+svc.updateService(ev); 
+cout << "\n--- Program End ---\n"; 
+return 0; 
+}
