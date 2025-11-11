@@ -1,0 +1,60 @@
+
+#include <iostream> 
+#include <vector> 
+#include <algorithm>  
+using namespace std; 
+template <typename T> 
+void selection_sort(vector<T>& arr) { 
+int size = arr.size(); 
+for (int i = 0; i < size - 1; ++i) { 
+int minIndex = i; 
+for (int j = i + 1; j < size; ++j) { 
+if (arr[j] < arr[minIndex]) { 
+minIndex = j; 
+} 
+} 
+std::swap(arr[i], arr[minIndex]); 
+} 
+cout << "Sorted array: "; 
+for (const T& val : arr) { 
+cout << val << " "; 
+} 
+cout << endl; 
+} 
+int main() { 
+int choice; 
+while (true) { 
+cout << "\nChoose array type:\n"; 
+        cout << "1. Integer\n"; 
+        cout << "2. Float\n"; 
+        cout << "3. Exit\n"; 
+        cout << "Enter your choice: "; 
+        cin >> choice; 
+ 
+        if (choice == 1) { 
+            int size; 
+            cout << "Enter number of integer elements: "; 
+            cin >> size; 
+            vector<int> arr(size); 
+            cout << "Enter " << size << " integer values:\n"; 
+            for (int i = 0; i < size; ++i) cin >> arr[i]; 
+            selection_sort(arr); 
+        } else if (choice == 2) { 
+            int size; 
+            cout << "Enter number of float elements: "; 
+            cin >> size; 
+            vector<float> arr(size); 
+            cout << "Enter " << size << " float values:\n"; 
+            for (int i = 0; i < size; ++i) cin >> arr[i]; 
+            selection_sort(arr); 
+        } else if (choice == 3) { 
+            cout << "Exiting program. Goodbye!\n"; 
+            break; 
+        } else { 
+            cout << "Invalid choice. Program terminated.\n"; 
+            break; 
+        } 
+    } 
+ 
+return 0; 
+}
