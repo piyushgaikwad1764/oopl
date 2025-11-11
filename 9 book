@@ -1,0 +1,88 @@
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Book {
+public:
+    string title, author;
+    int year;
+
+    void getData() {
+        cin.ignore();
+        cout << "Enter title: "; getline(cin, title);
+        cout << "Enter author: "; getline(cin, author);
+        cout << "Enter year: "; cin >> year;
+    }
+
+    void showData() const {
+        cout << "Title: " << title << ", Author: " << author
+             << ", Year: " << year << endl;
+    }
+};
+
+void addBook(vector<Book> &lib) {
+    Book b;
+    b.getData();
+    lib.push_back(b);
+    cout << "Book added!\n";
+}
+
+void displayBooks(const vector<Book> &lib) {
+    if (lib.empty()) cout << "No books to display.\n";
+    else {
+        cout << "\nLibrary Books:\n";
+        for (size_t i = 0; i < lib.size(); ++i) {
+            cout << i + 1 << ". ";
+            lib[i].showData();
+        }
+    }
+}
+
+void deleteBook(vector<Book> &lib) {
+    int index;
+    cout << "Enter book index to delete: ";
+    cin >> index;
+    if (index < 1 || index > lib.size()) cout << "Invalid index!\n";
+    else {
+        lib.erase(lib.begin() + index - 1);
+        cout << "Book deleted!\n";
+    }
+}
+
+void sortByTitle(vector<Book> &lib) {
+    sort(lib.begin(), lib.end(), [](Book &a, Book &b) {
+        return a.title < b.title;
+    });
+    cout << "Books sorted by title.\n";
+}
+
+void sortByYear(vector<Book> &lib) {
+    sort(lib.begin(), lib.end(), [](Book &a, Book &b) {
+        return a.year < b.year;
+    });
+    cout << "Books sorted by year.\n";
+}
+
+int main() {
+    vector<Book> library;
+    int choice;
+
+    do {
+        cout << "\n1. Add Book\n2. Display Books\n3. Delete Book\n4. Sort by Title\n5. Sort by Year\n0. Exit\nEnter choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1: addBook(library); break;
+            case 2: displayBooks(library); break;
+            case 3: deleteBook(library); break;
+            case 4: sortByTitle(library); break;
+            case 5: sortByYear(library); break;
+            case 0: cout << "Exiting...\n"; break;
+            default: cout << "Invalid choice!\n";
+        }
+    } while (choice != 0);
+
+    return 0;
+}
