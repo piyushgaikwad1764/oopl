@@ -11,7 +11,7 @@ private:
     static int totalProducts; 
  
 public: 
-     
+    
     Product() { 
         cout << "\nEnter Product ID: "; 
         cin >> productID; 
