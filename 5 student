@@ -1,0 +1,134 @@
+
+#include <iostream> 
+#include <vector> 
+#include <string> 
+using namespace std; 
+ 
+class Student { 
+protected: 
+string name; 
+int id; 
+float grade; 
+mutable bool scholarshipStatus; 
+public: 
+explicit Student(string n = "", int i = 0, float g = 0.0f) 
+: name(n), id(i), grade(g), scholarshipStatus(false) {} 
+virtual void display() const = 0; 
+virtual void input() = 0; 
+Student& operator+(float g) { 
+grade += g; 
+return *this; 
+} 
+bool operator>(const Student& other) const { 
+return grade > other.grade; 
+} 
+void operator!() const { 
+scholarshipStatus = !scholarshipStatus; 
+} 
+friend ostream& operator<<(ostream& out, const Student& s) { 
+out << "Name: " << s.name << "\nID: " << s.id 
+<< "\nGrade: " << s.grade 
+<< "\nScholarship: " << (s.scholarshipStatus ? "Yes" : "No") << endl; 
+return out; 
+} 
+friend istream& operator>>(istream& in, Student& s) { 
+cout << "Enter name: "; 
+in.ignore(); 
+getline(in, s.name); 
+cout << "Enter ID: "; 
+in >> s.id; 
+cout << "Enter grade: "; 
+in >> s.grade; 
+return in; 
+} 
+virtual ~Student() {} 
+}; 
+ 
+class UndergraduateStudent : public Student { 
+public: 
+explicit UndergraduateStudent(string n = "", int i = 0, float g = 0.0f) 
+: Student(n, i, g) {} 
+void display() const override { 
+cout << "\nUndergraduate Student\n" << *this; 
+} 
+void input() override { 
+cin >> *this; 
+} 
+}; 
+ 
+class GraduateStudent : public Student { 
+string advisor; 
+public: 
+explicit GraduateStudent(string n = "", int i = 0, float g = 0.0f, string a = "N/A") 
+: Student(n, i, g), advisor(a) {} 
+void display() const override { 
+cout << "\nGraduate Student\n" << *this; 
+cout << "Advisor: " << advisor << endl; 
+} 
+void input() override { 
+cin >> *this; 
+cout << "Enter advisor name: "; 
+cin.ignore(); 
+getline(cin, advisor); 
+} 
+}; 
+int main() { 
+vector<Student*> students; 
+int n; 
+cout << "Enter number of students: "; 
+cin >> n; 
+for (int i = 0; i < n; ++i) { 
+int type; 
+cout << "\nEnter student type (1: Undergraduate, 2: Graduate): "; 
+cin >> type; 
+Student* s = nullptr; 
+if (type == 1) { 
+s = new UndergraduateStudent(); 
+} else if (type == 2) { 
+s = new GraduateStudent(); 
+} else { 
+cout << "Invalid type. Skipping.\n"; 
+continue; 
+} 
+s->input(); 
+students.push_back(s); 
+} 
+cout << "\n--- Student Records ---\n"; 
+for (Student* s : students) { 
+s->display(); 
+} 
+if (students.size() >= 2) { 
+*students[0] + 5.0;   // Add grade 
+!(*students[1]);      
+ 
+cout << "\nAfter updates:\n"; 
+students[0]->display(); 
+students[1]->display(); 
+if (*students[0] > *students[1]) 
+cout << "\nStudent 1 has a higher grade.\n"; 
+else 
+cout << "\nStudent 2 has a higher grade.\n"; 
+ 
+        cout << "\nCasted Students:\n"; 
+ 
+        for (size_t i = 0; i < students.size(); ++i) { 
+            GraduateStudent* gs = dynamic_cast<GraduateStudent*>(students[i]); 
+            if (gs) { 
+                cout << "students[" << i << "] is a GraduateStudent:\n"; 
+                gs->display(); 
+            } 
+ 
+            UndergraduateStudent* ug = dynamic_cast<UndergraduateStudent*>(students[i]); 
+            if (ug) { 
+                cout << "students[" << i << "] is an UndergraduateStudent:\n"; 
+                ug->display(); 
+            } 
+        } 
+    } 
+ 
+    for (Student* s : students) { 
+        delete s; 
+    } 
+ 
+    return 0; 
+}
