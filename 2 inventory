@@ -1,0 +1,75 @@
+#include <iostream> 
+#include <string> 
+using namespace std; 
+ 
+class Product { 
+private: 
+    int productID; 
+    string productName; 
+    float productPrice; 
+    int quantity; 
+    static int totalProducts; 
+ 
+public: 
+     
+    Product() { 
+        cout << "\nEnter Product ID: "; 
+        cin >> productID; 
+        cout << "Enter Product Name: "; 
+        cin >> productName; 
+        cout << "Enter Product Price: "; 
+        cin >> productPrice; 
+        cout << "Enter Quantity in Stock: "; 
+        cin >> quantity; 
+        totalProducts++; 
+    } 
+    void display() const { 
+        cout << "\nProduct ID: " << productID << endl; 
+        cout << "Product Name: " << productName << endl; 
+        cout << "Product Price: " << productPrice << endl; 
+        cout << "Quantity in Stock: " << quantity << endl; 
+    } 
+    static void showTotalProducts() { 
+        cout << "\nTotal Products Created: " << totalProducts << endl; 
+    } 
+    
+        inline float stockValue() const { 
+        return productPrice * quantity; 
+    } 
+    friend void comparePrice(const Product &p1, const Product &p2); 
+}; 
+ 
+int Product::totalProducts = 0; 
+ 
+void comparePrice(const Product &p1, const Product &p2) { 
+    cout << "\nPrice Comparison:\n"; 
+    if (p1.productPrice > p2.productPrice) { 
+        cout << p1.productName << " is more expensive than " << p2.productName << endl; 
+    } else if (p1.productPrice < p2.productPrice) { 
+        cout << p2.productName << " is more expensive than " << p1.productName << endl; 
+    } else { 
+        cout << "Both products have the same price." << endl; 
+    } 
+} 
+ 
+int main() { 
+    cout << "Enter details for Product 1:"; 
+    Product prod1; 
+ 
+    cout << "\nEnter details for Product 2:"; 
+    Product prod2; 
+ 
+     
+    prod1.display(); 
+    cout << "Total Stock Value: " << prod1.stockValue() << endl; 
+ 
+    prod2.display(); 
+    cout << "Total Stock Value: " << prod2.stockValue() << endl; 
+ 
+    
+    Product::showTotalProducts(); 
+ 
+     
+comparePrice(prod1, prod2); 
+return 0; 
+} 
