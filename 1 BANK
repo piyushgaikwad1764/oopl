@@ -12,10 +12,10 @@ string accountType;
 string ifsc; 
 float balance; 
 public: 
-// Default constructor 
+ 
 BankAccount() : name(""), accountNumber(""), dob(""), address(""), 
 phone(""), accountType(""), ifsc(""), balance(0.0f) {} 
-// Parameterized constructor 
+
 BankAccount(string n, string accNo, string d, string addr, string ph, 
 string type, string code, float bal) 
 : name(n), accountNumber(accNo), dob(d), address(addr), 
