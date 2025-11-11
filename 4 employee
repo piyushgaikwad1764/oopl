@@ -1,0 +1,121 @@
+
+#include <iostream> 
+#include <string> 
+#include <vector> 
+using namespace std; 
+ 
+class Employee { 
+protected: 
+string name; 
+int id; 
+public: 
+Employee(const string& name, int id) : name(name), id(id) {} 
+virtual ~Employee() { 
+cout << "Destroying Employee: " << name << endl; 
+} 
+virtual void displayInfo() const = 0; 
+}; 
+ 
+class FullTimeEmployee : public Employee { 
+double salary; 
+public: 
+FullTimeEmployee(const string& name, int id, double salary) 
+: Employee(name, id), salary(salary) {} 
+void displayInfo() const override { 
+cout << "\nFullTimeEmployee: " << name 
+<< ", ID: " << id 
+<< ", Salary: Rs." << salary << endl; 
+} 
+~FullTimeEmployee() override { 
+cout << "Destroying FullTimeEmployee: " << name << endl; 
+} 
+}; 
+ 
+class PartTimeEmployee : public Employee { 
+double hourlyRate; 
+int hoursWorked; 
+public: 
+PartTimeEmployee(const string& name, int id, double hourlyRate, int hoursWorked) 
+: Employee(name, id), hourlyRate(hourlyRate), hoursWorked(hoursWorked) {} 
+void displayInfo() const override { 
+cout << "\nPartTimeEmployee: " << name 
+<< ", ID: " << id 
+<< ", Hourly Rate: Rs." << hourlyRate 
+<< ", Hours Worked: " << hoursWorked << endl; 
+} 
+~PartTimeEmployee() override { 
+cout << "Destroying PartTimeEmployee: " << name << endl; 
+} 
+}; 
+ 
+class Intern : public Employee { 
+string school; 
+int durationMonths; 
+public: 
+Intern(const string& name, int id, const string& school, int durationMonths) 
+: Employee(name, id), school(school), durationMonths(durationMonths) {} 
+void displayInfo() const override { 
+cout << "\nIntern: " << name 
+<< ", ID: " << id 
+<< ", School: " << school 
+<< ", Duration: " << durationMonths << " months" << endl; 
+} 
+~Intern() override { 
+cout << "Destroying Intern: " << name << endl; 
+} 
+}; 
+int main() { 
+vector<Employee*> employees; 
+int choice; 
+ 
+    do { 
+        cout << "\nChoose Employee Type:\n"; 
+        cout << "1. Full-Time\n2. Part-Time\n3. Intern\n4. Exit\nEnter choice: "; 
+        cin >> choice; 
+ 
+        if (choice == 4) break; 
+ 
+        string name; 
+        int id; 
+ 
+        cout << "Enter Name: "; 
+        cin.ignore(); 
+        getline(cin, name); 
+        cout << "Enter ID: "; 
+        cin >> id; 
+ 
+        if (choice == 1) { 
+            double salary; 
+            cout << "Enter Salary: "; 
+            cin >> salary; 
+            employees.push_back(new FullTimeEmployee(name, id, salary)); 
+        } else if (choice == 2) { 
+            double rate; 
+            int hours; 
+            cout << "Enter Hourly Rate: "; 
+            cin >> rate; 
+            cout << "Enter Hours Worked: "; 
+            cin >> hours; 
+            employees.push_back(new PartTimeEmployee(name, id, rate, hours)); 
+        } else if (choice == 3) { 
+            string school; 
+            int duration; 
+cout << "Enter School: "; 
+cin.ignore(); 
+getline(cin, school); 
+cout << "Enter Duration (months): "; 
+cin >> duration; 
+employees.push_back(new Intern(name, id, school, duration)); 
+} else { 
+cout << "Invalid choice.\n"; 
+} 
+} while (true); 
+cout << "\n--- Employee Records ---\n"; 
+for (Employee* emp : employees) { 
+emp->displayInfo(); 
+} 
+for (Employee* emp : employees) { 
+delete emp; 
+} 
+return 0; 
+}
