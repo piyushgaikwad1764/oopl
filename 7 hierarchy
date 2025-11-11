@@ -1,0 +1,120 @@
+
+#include <iostream> 
+#include <string> 
+#include <limits> 
+using namespace std; 
+ 
+class Publication { 
+protected: 
+string title; 
+float price; 
+public: 
+Publication() : title(""), price(0.0f) {} 
+virtual void input() { 
+cout << "Enter title: "; 
+cin.ignore(); 
+getline(cin, title); 
+cout << "Enter price: "; 
+cin >> price; 
+if (cin.fail() || price < 0) { 
+throw invalid_argument("Invalid price"); 
+} 
+} 
+virtual void display() const { 
+cout << "Title: " << title << "\nPrice: " << price << endl; 
+} 
+virtual void reset() { 
+title = ""; 
+price = 0.0f; 
+} 
+virtual ~Publication() {} 
+}; 
+ 
+class Book : public Publication { 
+int pageCount; 
+public: 
+Book() : pageCount(0) {} 
+void input() override { 
+        try { 
+            Publication::input(); 
+ 
+            cout << "Enter page count: "; 
+            cin >> pageCount; 
+ 
+            if (cin.fail() || pageCount < 0) { 
+                throw invalid_argument("Invalid page count"); 
+            } 
+        } catch (...) { 
+            cout << "Exception caught! Resetting book data.\n"; 
+            reset(); 
+            pageCount = 0; 
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        } 
+    } 
+ 
+    void display() const override { 
+        cout << "\nBook Details:\n"; 
+        Publication::display(); 
+        cout << "Page Count: " << pageCount << endl; 
+    } 
+ 
+    void reset() override { 
+        Publication::reset(); 
+        pageCount = 0; 
+    } 
+}; 
+ 
+class Tape : public Publication { 
+    float playTime; 
+ 
+public: 
+    Tape() : playTime(0.0f) {} 
+ 
+    void input() override { 
+        cout << "Enter title: "; 
+        cin.ignore(); 
+        getline(cin, title); 
+ 
+        try { 
+            cout << "Enter price: "; 
+            cin >> price; 
+            if (cin.fail() || price < 0) { 
+                throw invalid_argument("Invalid price"); 
+            } 
+ 
+            cout << "Enter play time (in minutes): "; 
+            cin >> playTime; 
+            if (cin.fail() || playTime < 0) { 
+                throw invalid_argument("Invalid play time"); 
+            } 
+        } catch (...) { 
+            cout << "Exception caught! Resetting tape data.\n"; 
+            price = 0.0f; 
+            playTime = 0.0f; 
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        } 
+    } 
+void display() const override { 
+cout << "\nTape Details:\n"; 
+Publication::display(); 
+cout << "Play Time: " << playTime << " minutes" << endl; 
+} 
+void reset() override { 
+Publication::reset(); 
+playTime = 0.0f; 
+} 
+}; 
+int main() { 
+Book b; 
+Tape t; 
+cout << "--- Enter Book Information ---\n"; 
+b.input(); 
+cout << "\n--- Enter Tape Information ---\n"; 
+t.input(); 
+cout << "\n--- Displaying Publication Details ---\n"; 
+b.display(); 
+t.display(); 
+return 0; 
+}
